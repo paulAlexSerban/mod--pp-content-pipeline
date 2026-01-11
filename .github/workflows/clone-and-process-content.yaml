@@ -1,0 +1,43 @@
+name: Clone and Process Content
+
+on:
+  workflow_dispatch:  # Manual trigger
+  push:
+    branches:
+      - main
+
+jobs:
+  clone-and-process:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout this repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+      
+      - name: Clone private content repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.CONTENT_REPO_TOKEN }}
+        run: |
+          git clone https://$GITHUB_TOKEN@github.com/paulAlexSerban/content--paulserban.eu.git content-source
+
+      - name:
+        run: ls -la content-source 
+      
+    #   - name: Install dependencies
+    #     run: npm install
+      
+    #   - name: Process content
+    #     run: npm run process
+      
+    #   - name: Commit processed content
+    #     run: |
+    #       git config user.name "GitHub Actions"
+    #       git config user.email "actions@github.com"
+    #       git add .
+    #       git commit -m "Update processed content" || echo "No changes to commit"
+    #       git push
