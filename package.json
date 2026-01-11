@@ -1,0 +1,8 @@
+{
+  "name": "mod--pp-content-pipeline",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/paulAlexSerban/mod--pp-content-pipeline.git",
+  "author": "paulAlexSerban <paul.alex.serban@gmail.com>",
+  "license": "MIT"
+}
