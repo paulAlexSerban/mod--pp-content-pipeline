@@ -1,7 +1,7 @@
 name: Clone and Process Content
 
 on:
-  workflow_dispatch:  # Manual trigger
+  workflow_dispatch: # Manual trigger
   push:
     branches:
       - main
@@ -9,31 +9,34 @@ on:
 jobs:
   clone-and-process:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout this repository
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: '.nvmrc'
-      
+          node-version-file: ".nvmrc"
+
+      - name: Install dependencies
+        run: |
+          npm i -g yarn
+          yarn install
+
       - name: Clone private content repository
         env:
           GITHUB_TOKEN: ${{ secrets.CONTENT_REPO_TOKEN }}
+          CONTENT_REPO_URL: https://github.com/paulAlexSerban/content--paulserban.eu.git
         run: |
-          git clone https://$GITHUB_TOKEN@github.com/paulAlexSerban/content--paulserban.eu.git content-source
+          node ./scripts/clone-repo.js
 
       - name:
-        run: ls -la content-source 
-      
-    #   - name: Install dependencies
-    #     run: npm install
-      
+        run: ls -la content-source
+  
     #   - name: Process content
     #     run: npm run process
-      
+
     #   - name: Commit processed content
     #     run: |
     #       git config user.name "GitHub Actions"
