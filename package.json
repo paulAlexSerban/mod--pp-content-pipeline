@@ -2,10 +2,18 @@
   "name": "mod--pp-content-pipeline",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "repository": "https://github.com/paulAlexSerban/mod--pp-content-pipeline.git",
   "author": "paulAlexSerban <paul.alex.serban@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "dotenv": "^17.2.3"
+    "@types/node": "^25.0.6",
+    "dotenv": "^17.2.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "scripts": {
+    "start": "ts-node parsers/mdx/index.ts",
+    "build": "tsc"
   }
 }
