@@ -1,10 +1,19 @@
 import type { IDatabase } from "../connection.ts";
-interface ContentData {
+export interface IContentData {
   slug: string;
   type: string;
   title: string;
   subheading: string;
   excerpt: string;
+  author: string;
+  date: string;
+  status: string;
+  pinned: number;
+  repo_url: string;
+  demo_url: string;
+  markdown_content: string;
+  full_path: string;
+  compiled_content: string;
 }
 
 class ContentRepository {
@@ -13,7 +22,7 @@ class ContentRepository {
     this.db = db;
   }
 
-  insertContent(contentData: ContentData): number | bigint {
+  insertContent(contentData: IContentData): number | bigint {
     const stmt = this.db.prepare(`
             INSERT INTO content (
                 slug, type, title, subheading, excerpt, author, date, 
@@ -30,12 +39,12 @@ class ContentRepository {
     return info.lastInsertRowid;
   }
 
-  findBySlug(slug: string): ContentData | undefined {
-    return this.db.prepare("SELECT * FROM content WHERE slug = ?").get(slug) as ContentData | undefined;
+  findBySlug(slug: string): IContentData | undefined {
+    return this.db.prepare("SELECT * FROM content WHERE slug = ?").get(slug) as IContentData | undefined;
   }
 
-  findAll(): ContentData[] {
-    return this.db.prepare("SELECT * FROM content").all() as ContentData[];
+  findAll(): IContentData[] {
+    return this.db.prepare("SELECT * FROM content").all() as IContentData[];
   }
 
   deleteAll() {

@@ -1,37 +1,53 @@
-
+import type { RunResult } from "better-sqlite3";
 import type { IDatabase } from "../connection.ts";
 
-export class TagRepository {
-      private db: IDatabase;
+export interface ITag {
+  id: number | bigint;
+  name: string;
+  slug: string;
+}
+
+export interface ITagRepository {
+  db: IDatabase;
+  insertTag(name: string, slug: string): RunResult;
+  findBySlug(slug: string): ITag | undefined;
+  linkTagToContent(contentId: number | bigint, tagId: number | bigint): RunResult;
+  getTagsForContent(contentId: number | bigint): ITag[];
+}
+
+export class TagRepository implements ITagRepository {
+  public db: IDatabase;
   constructor(db: IDatabase) {
     this.db = db;
   }
 
-
-
-    insertTag(name: string, slug: string) {
-        const stmt = this.db.prepare(`
+  insertTag(name: string, slug: string): RunResult {
+    const stmt = this.db.prepare(`
             INSERT OR IGNORE INTO tags (name, slug) VALUES (?, ?)
         `);
-        return stmt.run(name, slug);
-    }
+    return stmt.run(name, slug);
+  }
 
-    findBySlug(slug: string) {
-        return this.db.prepare('SELECT * FROM tags WHERE slug = ?').get(slug);
-    }
+  findBySlug(slug: string): ITag | undefined {
+    return this.db.prepare("SELECT * FROM tags WHERE slug = ?").get(slug) as ITag | undefined;
+  }
 
-    linkTagToContent(contentId: number | bigint, tagId: number | bigint) {
-        const stmt = this.db.prepare(`
+  linkTagToContent(contentId: number | bigint, tagId: number | bigint): RunResult {
+    const stmt = this.db.prepare(`
             INSERT OR IGNORE INTO content_tags (content_id, tag_id) VALUES (?, ?)
         `);
-        return stmt.run(contentId, tagId);
-    }
+    return stmt.run(contentId, tagId);
+  }
 
-    getTagsForContent(contentId: number | bigint) {
-        return this.db.prepare(`
+  getTagsForContent(contentId: number | bigint): ITag[] {
+    return this.db
+      .prepare(
+        `
             SELECT t.* FROM tags t
             INNER JOIN content_tags ct ON t.id = ct.tag_id
             WHERE ct.content_id = ?
-        `).all(contentId);
-    }
+        `,
+      )
+      .all(contentId) as ITag[];
+  }
 }
