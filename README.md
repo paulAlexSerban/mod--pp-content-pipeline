@@ -5,3 +5,4 @@ What it does:
 - depending on the file type, processes the content accordingly (md, mdx, images, videos, etc.)
 - outputs the processed content to a specified directory in a SQLite database and commits it
 - output content will be polled by the main portfolio applications
+- portfolio application will be mainly built with Next.js and Typescript

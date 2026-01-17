@@ -7,13 +7,16 @@
   "author": "paulAlexSerban <paul.alex.serban@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^25.0.6",
+    "better-sqlite3": "^12.6.2",
     "dotenv": "^17.2.3",
+    "next-mdx-remote": "^5.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
   "scripts": {
-    "start": "ts-node parsers/mdx/index.ts",
+    "start": "ts-node parsers/nextjs-mdx/index.ts",
     "build": "tsc"
   }
 }
