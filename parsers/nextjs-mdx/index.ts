@@ -1,5 +1,6 @@
-import { DatabaseConnection } from "./database/connection.ts";
-
+import { DatabaseConnection, IDatabase } from "./database/connection.ts";
+import { Schema } from "./database/schema.ts";
+import { ContentRepository } from "./database/repositories/contentRepository.ts";
 // export async function parseMdxFile(filePath: string): Promise<string> {
 //   try {
 //     const absolutePath = path.resolve(filePath);
@@ -41,15 +42,18 @@ import { DatabaseConnection } from "./database/connection.ts";
 // console.log("MDX Files:", mdxFiles);
 
 const main = async () => {
+  // initialize database connection
   const dbPath = process.env.DATABASE_PATH || "./database/content.db";
   const dbConnection = new DatabaseConnection(dbPath);
-  const db = dbConnection.getConnection();
+  const db: IDatabase = dbConnection.getConnection();
 
-  // test database connection
-  const row = db.prepare("SELECT sqlite_version() AS version").get() as { version: string };
-  console.log("SQLite Version:", row.version);
+  // Initialize schema
+  const schema = new Schema(db);
+  await schema.initialize();
 
-  dbConnection.close();
+  // Initialize repositories
+  const contentRepo = new ContentRepository(db);
+  // const tagRepo = new TagRepository(db);
 };
 
 main();

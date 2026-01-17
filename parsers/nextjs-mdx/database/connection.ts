@@ -1,8 +1,10 @@
 
 import Database from "better-sqlite3";
 
-class DatabaseConnection {
-  private db: Database.Database;
+export interface IDatabase extends Database.Database {}
+
+export class DatabaseConnection {
+  private db: IDatabase;
 
   constructor(dbPath: string) {
     this.db = new Database(dbPath, { verbose: console.log });
@@ -10,7 +12,7 @@ class DatabaseConnection {
     this.db.pragma("foreign_keys = ON");
   }
 
-  getConnection(): Database.Database {
+  getConnection(): IDatabase {
     return this.db;
   }
 
@@ -18,5 +20,3 @@ class DatabaseConnection {
     this.db.close();
   }
 }
-
-export { DatabaseConnection };
