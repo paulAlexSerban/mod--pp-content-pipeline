@@ -1,8 +1,12 @@
 import fs from "fs";
 import path from "path";
-import { IDatabase } from "./connection";
+import { fileURLToPath } from "url";
+import type { IDatabase } from "./connection.ts";
 
-class Schema {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export class Schema {
   constructor(db: IDatabase) {
     this.db = db;
   }
@@ -22,4 +26,3 @@ class Schema {
   }
 }
 
-export { Schema };

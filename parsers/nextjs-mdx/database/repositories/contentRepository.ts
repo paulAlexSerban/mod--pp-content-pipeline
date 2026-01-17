@@ -1,4 +1,4 @@
-import { IDatabase } from "../connection";
+import type { IDatabase } from "../connection.ts";
 interface ContentData {
   slug: string;
   type: string;

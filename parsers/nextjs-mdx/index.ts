@@ -1,6 +1,7 @@
-import { DatabaseConnection, IDatabase } from "./database/connection.ts";
+import { DatabaseConnection, type IDatabase } from "./database/connection.ts";
 import { Schema } from "./database/schema.ts";
 import { ContentRepository } from "./database/repositories/contentRepository.ts";
+import { TagRepository } from "./database/repositories/tagRepository.ts";
 // export async function parseMdxFile(filePath: string): Promise<string> {
 //   try {
 //     const absolutePath = path.resolve(filePath);
@@ -53,7 +54,7 @@ const main = async () => {
 
   // Initialize repositories
   const contentRepo = new ContentRepository(db);
-  // const tagRepo = new TagRepository(db);
+  const tagRepo = new TagRepository(db);
 };
 
 main();
