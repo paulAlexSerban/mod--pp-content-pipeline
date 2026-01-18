@@ -8,7 +8,11 @@ export class DatabaseConnection {
 
   constructor(dbPath: string) {
     this.db = new Database(dbPath, { verbose: console.log });
+    // Enable WAL mode and foreign key constraints
+    // WAL mode improves concurrency and performance by allowing simultaneous reads and writes
+    // Foreign key constraints ensure referential integrity between tables
     this.db.pragma("journal_mode = WAL");
+    // Enable foreign key constraints
     this.db.pragma("foreign_keys = ON");
   }
 

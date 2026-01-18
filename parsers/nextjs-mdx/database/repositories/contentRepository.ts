@@ -5,17 +5,17 @@ export interface IContentData {
   slug: string;
   type: string;
   title: string;
-  subheading: string;
-  excerpt: string;
-  author: string;
+  // subheading: string;
+  // excerpt: string;
+  // author: string;
   date: string;
   status: string;
-  pinned: number;
-  repo_url: string;
-  demo_url: string;
-  markdown_content: string;
-  full_path: string;
-  compiled_content: string;
+  // pinned: number;
+  // repo_url: string;
+  // demo_url: string;
+  // markdown_content: string;
+  // full_path: string;
+  // compiled_content: string;
 }
 
 class ContentRepository {
