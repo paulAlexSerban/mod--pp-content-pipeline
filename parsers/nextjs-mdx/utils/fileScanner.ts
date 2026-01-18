@@ -16,13 +16,15 @@ export type ScannedDirectory = {
 export class FileScanner {
   async scanDirectory({
     baseDir,
-    sourceFolders = ["backlog", "publish"],
+    sourceFolders = ["publish"],
     typePattern = /projects|coursework|posts|booknotes|snippets/,
   }: DirectoryPath): Promise<ScannedDirectory[]> {
     const result: ScannedDirectory[] = [];
     for (const sourceFolder of sourceFolders) {
       const sourcePath = path.join(baseDir, sourceFolder);
-      const contentItems = await fs.readdir(sourcePath, { withFileTypes: true });
+      const contentItems = await fs.readdir(sourcePath, {
+        withFileTypes: true,
+      });
       const filteredItems = contentItems.filter(
         (item) => item.isDirectory() && typePattern.test(item.name),
       );
