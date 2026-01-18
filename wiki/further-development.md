@@ -2,7 +2,7 @@
 
 ## Drizzle ORM Next Steps
 - `drizzle-kit` is wired in; use it to generate or push migrations.
-- Consider switching SQL migrations to Drizzle migrations (optional).
+- Keep Drizzle migrations as the single source of truth.
 - Add repository integration tests against a temporary SQLite DB.
 
 ## Data Quality

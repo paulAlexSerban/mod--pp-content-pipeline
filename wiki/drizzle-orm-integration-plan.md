@@ -2,13 +2,13 @@
 
 ## Goals
 - Integrate Drizzle ORM with the existing SQLite (`better-sqlite3`) setup.
-- Preserve the current CLI workflow and schema migration SQL.
+- Preserve the current CLI workflow and consolidate schema migrations in Drizzle.
 - Keep repository APIs stable where possible.
 
 ## Architecture Overview (Target)
 - **Database Connection**: `better-sqlite3` remains the low-level connection.
 - **ORM Layer**: Drizzle wraps the same connection for typed queries.
-- **Schema Source of Truth**: SQL migrations stay as-is; Drizzle schema mirrors SQL tables.
+- **Schema Source of Truth**: Drizzle schema + `drizzle-kit` migrations.
 - **Repositories**: Move CRUD to Drizzle queries, minimize raw SQL.
 - **Migration Service**: Keep the transaction on the raw connection; repositories use Drizzle.
 
@@ -32,6 +32,8 @@
    - Pass Drizzle DB to repositories.
 7. **Validate runtime behavior**
    - Run `yarn test:unit` (or `yarn start`) and fix any type/runtime issues.
+8. **Retire legacy SQL migrations**
+   - Remove `database/schema.ts` usage and related unit tests.
 
 ## TODOs
 - [ ] Decide if `content-source` should remain the default root (currently yes).
@@ -44,7 +46,7 @@
 - `drizzle-kit`
 
 ## Risks / Notes
-- Drizzle schema must mirror SQL migrations exactly.
+- Drizzle schema must reflect current DB shape before generating migrations.
 - If Drizzle `returning()` isn’t used, IDs should be resolved via a follow-up query.
 - Keep transaction boundaries on the raw connection to avoid async transaction errors.
 - `drizzle-kit` uses `drizzle.config.ts` and reads `DATABASE_PATH` for SQLite DB location.

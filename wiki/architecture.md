@@ -13,8 +13,7 @@
   - Wires DB connection, schema initialization, repositories, and migration service.
 - **Database Layer**:
   - `database/connection.ts`: low-level SQLite connection.
-  - `database/schema.ts`: executes SQL migration files.
-  - `database/drizzle/*`: Drizzle schema + DB wrapper.
+  - `database/drizzle/*`: Drizzle schema + DB wrapper + migrator.
   - `database/repositories/*`: data access via Drizzle ORM.
 - **Parsing Layer**:
   - `parsers/mdxParser.ts`: MDX parsing and compilation.
@@ -34,5 +33,5 @@
 
 ## Extensibility Points
 - Add new parsers under `parsers/` and plug them into a new migration service.
-- Extend schema via SQL migrations + Drizzle schema updates.
+- Extend schema via Drizzle schema updates and `drizzle-kit` migrations.
 - Add repositories for new tables.
