@@ -26,6 +26,7 @@
     "ts-jest": "^29.4.6"
   },
   "scripts": {
+    "cloneContentRepo": "ts-node scripts/clone-repo.ts",
     "start": "ts-node parsers/nextjs-mdx/index.ts",
     "build": "tsc",
     "test": "jest",
