@@ -1,4 +1,5 @@
 import { DatabaseConnection, type IDatabase } from "./database/connection.ts";
+import { createDrizzleDb } from "./database/drizzle/connection.ts";
 import { Schema } from "./database/schema.ts";
 import { ContentRepository } from "./database/repositories/contentRepository.ts";
 import { TagRepository } from "./database/repositories/tagRepository.ts";
@@ -13,14 +14,15 @@ const main = async () => {
     const dbPath = process.env.DATABASE_PATH || "./database/content.db";
     const dbConnection = new DatabaseConnection(dbPath);
     const db: IDatabase = dbConnection.getConnection();
+    const drizzleDb = createDrizzleDb(db);
 
     // Initialize schema
     const schema = new Schema(db);
     await schema.initialize();
 
     // Initialize repositories
-    const contentRepo = new ContentRepository(db);
-    const tagRepo = new TagRepository(db);
+    const contentRepo = new ContentRepository(drizzleDb);
+    const tagRepo = new TagRepository(drizzleDb);
 
     // Initialize services
     const fileScanner = new FileScanner();

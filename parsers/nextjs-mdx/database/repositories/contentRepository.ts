@@ -1,4 +1,6 @@
-import type { IDatabase } from "../connection.ts";
+import { eq } from "drizzle-orm";
+import type { DrizzleDb } from "../drizzle/connection.ts";
+import { content } from "../drizzle/schema.ts";
 export interface IContentData {
   slug: string;
   type: string;
@@ -17,38 +19,35 @@ export interface IContentData {
 }
 
 class ContentRepository {
-  private db: IDatabase;
-  constructor(db: IDatabase) {
+  private db: DrizzleDb;
+  constructor(db: DrizzleDb) {
     this.db = db;
   }
 
   insertContent(contentData: IContentData): number | bigint {
-    const stmt = this.db.prepare(`
-            INSERT INTO content (
-                slug, type, title, subheading, excerpt, author, date, 
-                status, pinned, repo_url, demo_url, markdown_content, 
-                compiled_content, full_path
-            ) VALUES (
-                @slug, @type, @title, @subheading, @excerpt, @author, @date,
-                @status, @pinned, @repo_url, @demo_url, @markdown_content,
-                @compiled_content, @full_path
-            )
-        `);
-
-    const info = stmt.run(contentData);
-    return info.lastInsertRowid;
+    this.db.insert(content).values(contentData).run();
+    const record = this.db
+      .select({ id: content.id })
+      .from(content)
+      .where(eq(content.slug, contentData.slug))
+      .get();
+    return record?.id ?? 0;
   }
 
   findBySlug(slug: string): IContentData | undefined {
-    return this.db.prepare("SELECT * FROM content WHERE slug = ?").get(slug) as IContentData | undefined;
+    return this.db
+      .select()
+      .from(content)
+      .where(eq(content.slug, slug))
+      .get() as IContentData | undefined;
   }
 
   findAll(): IContentData[] {
-    return this.db.prepare("SELECT * FROM content").all() as IContentData[];
+    return this.db.select().from(content).all() as IContentData[];
   }
 
   deleteAll() {
-    return this.db.prepare("DELETE FROM content").run();
+    return this.db.delete(content).run();
   }
 }
 

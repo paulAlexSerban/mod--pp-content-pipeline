@@ -1,5 +1,7 @@
 import type { RunResult } from "better-sqlite3";
-import type { IDatabase } from "../connection.ts";
+import { eq } from "drizzle-orm";
+import type { DrizzleDb } from "../drizzle/connection.ts";
+import { contentTags, tags } from "../drizzle/schema.ts";
 
 export interface ITag {
   id: number | bigint;
@@ -8,7 +10,7 @@ export interface ITag {
 }
 
 export interface ITagRepository {
-  db: IDatabase;
+  db: DrizzleDb;
   insertTag(name: string, slug: string): RunResult;
   findBySlug(slug: string): ITag | undefined;
   linkTagToContent(contentId: number | bigint, tagId: number | bigint): RunResult;
@@ -16,38 +18,41 @@ export interface ITagRepository {
 }
 
 export class TagRepository implements ITagRepository {
-  public db: IDatabase;
-  constructor(db: IDatabase) {
+  public db: DrizzleDb;
+  constructor(db: DrizzleDb) {
     this.db = db;
   }
 
   insertTag(name: string, slug: string): RunResult {
-    const stmt = this.db.prepare(`
-            INSERT OR IGNORE INTO tags (name, slug) VALUES (?, ?)
-        `);
-    return stmt.run(name, slug);
+    return this.db
+      .insert(tags)
+      .values({ name, slug })
+      .onConflictDoNothing()
+      .run();
   }
 
   findBySlug(slug: string): ITag | undefined {
-    return this.db.prepare("SELECT * FROM tags WHERE slug = ?").get(slug) as ITag | undefined;
+    return this.db
+      .select()
+      .from(tags)
+      .where(eq(tags.slug, slug))
+      .get() as ITag | undefined;
   }
 
   linkTagToContent(contentId: number | bigint, tagId: number | bigint): RunResult {
-    const stmt = this.db.prepare(`
-            INSERT OR IGNORE INTO content_tags (content_id, tag_id) VALUES (?, ?)
-        `);
-    return stmt.run(contentId, tagId);
+    return this.db
+      .insert(contentTags)
+      .values({ contentId: Number(contentId), tagId: Number(tagId) })
+      .onConflictDoNothing()
+      .run();
   }
 
   getTagsForContent(contentId: number | bigint): ITag[] {
     return this.db
-      .prepare(
-        `
-            SELECT t.* FROM tags t
-            INNER JOIN content_tags ct ON t.id = ct.tag_id
-            WHERE ct.content_id = ?
-        `,
-      )
-      .all(contentId) as ITag[];
+      .select({ id: tags.id, name: tags.name, slug: tags.slug })
+      .from(tags)
+      .innerJoin(contentTags, eq(tags.id, contentTags.tagId))
+      .where(eq(contentTags.contentId, Number(contentId)))
+      .all() as ITag[];
   }
 }
