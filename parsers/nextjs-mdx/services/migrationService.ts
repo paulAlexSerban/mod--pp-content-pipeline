@@ -86,13 +86,16 @@ export class MigrationService {
           // Insert content
           const contentDataObject: IContentData = {
             ...contentData,
-            // subheading: contentData.subheading ?? "",
-            // excerpt: contentData.excerpt ?? "",
-            // author: contentData.author ?? "",
+            subheading: contentData.subheading ?? "",
+            excerpt: contentData.excerpt ?? "",
+            author: contentData.author ?? "",
             date: contentData.date ?? "",
-            // repo_url: contentData.repo_url ?? "",
-            // demo_url: contentData.demo_url ?? "",
-            // compiled_content: parsed.compiledContent,
+            repo_url: contentData.repo_url ?? "",
+            demo_url: contentData.demo_url ?? "",
+            markdown_content:
+              contentData.markdown_content ?? parsed.markdownContent ?? "",
+            full_path: contentData.full_path ?? parsed.fullPath ?? filePath,
+            compiled_content: parsed.compiledContent ?? "",
           };
 
           insertContentWithTags(contentDataObject, contentData.tags);

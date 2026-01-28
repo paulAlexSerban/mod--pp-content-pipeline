@@ -5,17 +5,17 @@ export interface IContentData {
   slug: string;
   type: string;
   title: string;
-  // subheading: string;
-  // excerpt: string;
-  // author: string;
+  subheading: string;
+  excerpt: string;
+  author: string;
   date: string;
   status: string;
   // pinned: number;
-  // repo_url: string;
-  // demo_url: string;
-  // markdown_content: string;
-  // full_path: string;
-  // compiled_content: string;
+  repo_url: string;
+  demo_url: string;
+  markdown_content: string;
+  full_path: string;
+  compiled_content: string;
 }
 
 class ContentRepository {
@@ -35,6 +35,14 @@ class ContentRepository {
           title: contentData.title,
           date: contentData.date,
           status: contentData.status,
+          subheading: contentData.subheading,
+          excerpt: contentData.excerpt,
+          author: contentData.author,
+          markdown_content: contentData.markdown_content,
+          full_path: contentData.full_path,
+          compiled_content: contentData.compiled_content,
+          repo_url: contentData.repo_url,
+          demo_url: contentData.demo_url,
         },
       })
       .run();
