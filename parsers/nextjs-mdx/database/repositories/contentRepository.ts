@@ -25,7 +25,19 @@ class ContentRepository {
   }
 
   insertContent(contentData: IContentData): number | bigint {
-    this.db.insert(content).values(contentData).run();
+    this.db
+      .insert(content)
+      .values(contentData)
+      .onConflictDoUpdate({
+        target: content.slug,
+        set: {
+          type: contentData.type,
+          title: contentData.title,
+          date: contentData.date,
+          status: contentData.status,
+        },
+      })
+      .run();
     const record = this.db
       .select({ id: content.id })
       .from(content)
